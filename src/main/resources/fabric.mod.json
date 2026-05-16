@@ -3,9 +3,9 @@
 	"id": "immortality",
 	"version": "${version}",
 	"name": "Immortality",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "英雄不屈！",
 	"authors": [
-		"Me!"
+		"adoleiiiiii"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
