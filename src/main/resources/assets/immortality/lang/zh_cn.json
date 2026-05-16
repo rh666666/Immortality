@@ -1,0 +1,4 @@
+{
+    "effect.immortality.immortality": "不屈",
+    "effect.immortality.immortality.description": "持续时间内，当你死亡时会触发不死图腾效果，并使你的获得1分钟的力量buff，或使力量buff增加2级（时间重置为1分钟）"
+}
