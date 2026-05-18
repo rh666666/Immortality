@@ -6,11 +6,21 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+/**
+ * 模组状态效果注册入口。
+ */
 public class ModEffects {
-    /** 不屈buff */
-    public static final StatusEffect IMMORTALITY = new ImmortalityEffect();
 
-    public static void initialize() {
-        Registry.register(Registries.STATUS_EFFECT, new Identifier(Immortality.MOD_ID, "immortality"), IMMORTALITY);
-    }
+	/** 不屈 buff。 */
+	public static final StatusEffect IMMORTALITY = new ImmortalityEffect();
+
+	private ModEffects() {
+	}
+
+	/**
+	 * 向游戏注册不屈状态效果。
+	 */
+	public static void initialize() {
+		Registry.register(Registries.STATUS_EFFECT, new Identifier(Immortality.MOD_ID, "immortality"), IMMORTALITY);
+	}
 }
