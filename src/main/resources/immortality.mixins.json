@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ItemAccessor",
+    "LivingEntityDamageMixin",
+    "LivingEntityRemoveEffectMixin",
+    "PlayerEntityImmortalityMixin",
     "PlayerEntityMixin"
   ],
   "injectors": {
@@ -11,5 +14,5 @@
   },
   "overwrites": {
     "requireAnnotations": true
-	}
+  }
 }

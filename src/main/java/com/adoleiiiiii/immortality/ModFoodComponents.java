@@ -12,9 +12,9 @@ public class ModFoodComponents {
 
 	/** 不死图腾作为食物时的饱食度、饱和度和效果。 */
 	public static final FoodComponent TOTEM_OF_UNDYING = new FoodComponent.Builder()
-            .hunger(6)
-            .saturationModifier(1.0f)
-            .alwaysEdible()
+			.hunger(6)
+			.saturationModifier(1.0f)
+			.alwaysEdible()
 			.statusEffect(new StatusEffectInstance(ModEffects.IMMORTALITY, 5 * SharedConstants.TICKS_PER_MINUTE), 1.0f)
-            .build();
+			.build();
 }
