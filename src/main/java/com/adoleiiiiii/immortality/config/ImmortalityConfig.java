@@ -4,14 +4,12 @@ import com.adoleiiiiii.immortality.Immortality;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 /**
  * 不屈效果模组配置（{@code config/immortality.yml}）。
@@ -49,20 +47,7 @@ public final class ImmortalityConfig {
 
 		try {
 			String content = Files.readString(CONFIG_PATH, StandardCharsets.UTF_8);
-			Yaml yaml = new Yaml();
-			Object loaded = yaml.load(content);
-			if (!(loaded instanceof Map<?, ?> map)) {
-				LOGGER.warn("Config root is not a mapping, using defaults");
-				damageReductionK = DEFAULT_DAMAGE_REDUCTION_K;
-				return;
-			}
-			Object rawK = map.get("damageReductionK");
-			if (rawK instanceof Number number) {
-				damageReductionK = number.floatValue();
-			} else {
-				LOGGER.warn("damageReductionK missing or invalid, using default");
-				damageReductionK = DEFAULT_DAMAGE_REDUCTION_K;
-			}
+			damageReductionK = parseDamageReductionK(content);
 			validate();
 			LOGGER.info("Loaded config: damageReductionK={}", damageReductionK);
 		} catch (Exception e) {
@@ -78,6 +63,27 @@ public final class ImmortalityConfig {
 	 */
 	public static float getDamageReductionK() {
 		return damageReductionK;
+	}
+
+	/**
+	 * 从 YAML 文本解析 {@code damageReductionK}（忽略注释与空行）。
+	 *
+	 * @param content 配置文件全文
+	 * @return 减伤系数 k
+	 * @throws IllegalArgumentException 未找到有效键值时抛出
+	 */
+	private static float parseDamageReductionK(String content) {
+		for (String line : content.split("\\R")) {
+			String trimmed = line.trim();
+			if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+				continue;
+			}
+			if (trimmed.startsWith("damageReductionK:")) {
+				String value = trimmed.substring("damageReductionK:".length()).trim();
+				return Float.parseFloat(value);
+			}
+		}
+		throw new IllegalArgumentException("damageReductionK not found in config");
 	}
 
 	private static void copyDefaultConfig() {
