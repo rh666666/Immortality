@@ -15,7 +15,7 @@ public final class ModFoodComponents {
 			.nutrition(6)
 			.saturationMod(1.0f)
 			.alwaysEat()
-			.effect(new MobEffectInstance(ModEffects.IMMORTALITY_EFFECT, 5 * SharedConstants.TICKS_PER_MINUTE), 1.0f)
+			.effect(() -> new MobEffectInstance(ModEffects.IMMORTALITY_EFFECT, 5 * SharedConstants.TICKS_PER_MINUTE), 1.0f)
 			.build();
 
 	private ModFoodComponents() {
