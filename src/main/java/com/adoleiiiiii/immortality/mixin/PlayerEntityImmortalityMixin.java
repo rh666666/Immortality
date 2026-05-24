@@ -4,6 +4,7 @@ import com.adoleiiiiii.immortality.ImmortalityConstants;
 import com.adoleiiiiii.immortality.effect.ModEffects;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerAccess;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerNbt;
+import com.adoleiiiiii.immortality.util.ImmortalityDamageHelper;
 import com.adoleiiiiii.immortality.util.ImmortalityPenaltyHandler;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -65,6 +66,7 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		}
 
 		if (player.hasStatusEffect(ModEffects.IMMORTALITY)) {
+			immortality$syncKnockbackResistance();
 			return;
 		}
 
@@ -83,6 +85,7 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		immortality$buffSessionActive = false;
 		immortality$effectEndSettled = false;
 		immortality$refreshingBuff = false;
+		immortality$clearKnockbackResistance();
 	}
 
 	@Override
@@ -93,11 +96,13 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 	@Override
 	public void immortality$setDeathCount(int deathCount) {
 		immortality$deathCount = Math.max(0, deathCount);
+		immortality$syncKnockbackResistance();
 	}
 
 	@Override
 	public void immortality$incrementDeathCount() {
 		immortality$deathCount++;
+		immortality$syncKnockbackResistance();
 	}
 
 	@Override
@@ -155,6 +160,50 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		EntityAttributeInstance maxHealth = player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
 		if (maxHealth != null) {
 			maxHealth.removeModifier(ImmortalityConstants.MAX_HEALTH_PENALTY_MODIFIER_ID);
+		}
+	}
+
+	/**
+	 * 按当前死亡次数与最大生命值，同步不屈 buff 对应的击退抗性修饰符。
+	 */
+	@Unique
+	private void immortality$syncKnockbackResistance() {
+		PlayerEntity player = (PlayerEntity) (Object) this;
+		EntityAttributeInstance knockbackResistance =
+				player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+		if (knockbackResistance == null) {
+			return;
+		}
+
+		knockbackResistance.removeModifier(ImmortalityConstants.KNOCKBACK_RESISTANCE_MODIFIER_ID);
+		if (!player.hasStatusEffect(ModEffects.IMMORTALITY) || immortality$deathCount <= 0) {
+			return;
+		}
+
+		float resistance = ImmortalityDamageHelper.computeKnockbackResistance(
+				immortality$deathCount, player.getMaxHealth());
+		if (resistance <= 0.0f) {
+			return;
+		}
+
+		knockbackResistance.addTemporaryModifier(new EntityAttributeModifier(
+				ImmortalityConstants.KNOCKBACK_RESISTANCE_MODIFIER_ID,
+				"immortality_knockback_resistance",
+				resistance,
+				EntityAttributeModifier.Operation.ADDITION
+		));
+	}
+
+	/**
+	 * 移除不屈 buff 附加的击退抗性修饰符。
+	 */
+	@Unique
+	private void immortality$clearKnockbackResistance() {
+		PlayerEntity player = (PlayerEntity) (Object) this;
+		EntityAttributeInstance knockbackResistance =
+				player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+		if (knockbackResistance != null) {
+			knockbackResistance.removeModifier(ImmortalityConstants.KNOCKBACK_RESISTANCE_MODIFIER_ID);
 		}
 	}
 }

@@ -39,4 +39,15 @@ public final class ImmortalityDamageHelper {
 	public static float computeDamageMultiplier(int deathCount, float maxHealth) {
 		return 1.0f - computeDamageReduction(deathCount, maxHealth);
 	}
+
+	/**
+	 * 根据减伤比例计算击退抗性：与减伤比例 R 相同，上限 1。
+	 *
+	 * @param deathCount buff 期间累计的死亡次数
+	 * @param maxHealth  玩家当前最大生命值
+	 * @return 击退抗性，范围 [0, 1]
+	 */
+	public static float computeKnockbackResistance(int deathCount, float maxHealth) {
+		return Math.min(1.0f, computeDamageReduction(deathCount, maxHealth));
+	}
 }

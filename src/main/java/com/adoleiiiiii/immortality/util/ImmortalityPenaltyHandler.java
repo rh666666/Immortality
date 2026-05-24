@@ -84,6 +84,7 @@ public final class ImmortalityPenaltyHandler {
 
 	/**
 	 * 以「燃尽」伤害类型击杀玩家（死亡信息：%1$s燃尽了）。
+	 * 结算前已设置 {@code isEffectEndSettled}，免死 mixin 不会再次触发，避免 ConcurrentModificationException。
 	 *
 	 * @param player 玩家实体
 	 */

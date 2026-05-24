@@ -1,5 +1,6 @@
 package com.adoleiiiiii.immortality.mixin;
 
+import com.adoleiiiiii.immortality.damage.ImmortalityDamageTypes;
 import com.adoleiiiiii.immortality.effect.ModEffects;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerAccess;
 import com.adoleiiiiii.immortality.util.ImmortalityDamageHelper;
@@ -25,11 +26,17 @@ public abstract class LivingEntityDamageMixin {
 		if (!(self instanceof PlayerEntity player)) {
 			return amount;
 		}
+		if (source.isOf(ImmortalityDamageTypes.BURN_OUT)) {
+			return amount;
+		}
 		if (!player.hasStatusEffect(ModEffects.IMMORTALITY)) {
 			return amount;
 		}
 
 		ImmortalityPlayerAccess access = (ImmortalityPlayerAccess) player;
+		if (access.immortality$isEffectEndSettled()) {
+			return amount;
+		}
 		int deathCount = access.immortality$getDeathCount();
 		if (deathCount <= 0) {
 			return amount;

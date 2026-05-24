@@ -26,6 +26,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.minecraft.SharedConstants.TICKS_PER_MINUTE;
 import static net.minecraft.SharedConstants.TICKS_PER_SECOND;
 
+/**
+ * 拦截图腾免死逻辑：拥有不屈 buff 时触发与图腾等效的免死效果。
+ */
 @Mixin(LivingEntity.class)
 public class PlayerEntityMixin {
 
@@ -38,10 +41,17 @@ public class PlayerEntityMixin {
 		}
 
 		if (player.hasStatusEffect(ModEffects.IMMORTALITY)) {
+			if (player instanceof ImmortalityPlayerAccess access) {
+				// 效果结束结算或 buff 刷新过程中不应再次触发免死，避免与 removeAllEffects 等批量移除冲突
+				if (access.immortality$isEffectEndSettled() || access.immortality$isRefreshingBuff()) {
+					return;
+				}
+			}
 			if (!player.getWorld().isClient) {
 				triggerImmortalityEffect(player);
 			}
 			cir.setReturnValue(true);
+			cir.cancel();
 		}
 	}
 

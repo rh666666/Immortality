@@ -1,6 +1,6 @@
 {
     "effect.immortality.immortality": "不屈",
-    "effect.immortality.immortality.description": "持续时间内，当你死亡时会触发不死图腾效果，并获得1分钟的力量buff，或使力量buff增加2级（时间重置为1分钟）。每次抵抗死亡后获得叠乘减伤；效果结束时，按死亡次数扣除等量生命上限，复活后恢复。",
+    "effect.immortality.immortality.description": "持续时间内，当你死亡时会触发不死图腾效果，并获得1分钟的力量buff，或使力量buff增加2级（时间重置为1分钟）。每次抵抗死亡后获得叠乘减伤，并获得等比例的击退抗性（最高100%）；效果结束时，按死亡次数扣除等量生命上限，复活后恢复。",
     "advancements.immortality.burn_out_body.title": "燃尽此身",
     "advancements.immortality.burn_out_body.description": "在无尽的复苏中燃尽了自己。",
     "death.attack.burn_out": "%1$s燃尽了"
