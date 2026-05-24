@@ -8,7 +8,7 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 
 /**
- * 不屈状态效果：buff 期间抵抗死亡并获得叠乘减伤，结束时按死亡次数扣除生命上限。
+ * 不屈状态效果：buff 期间抵抗死亡并获得叠乘减伤与击退抗性，结束时按死亡次数扣除生命上限。
  */
 public class ImmortalityEffect extends StatusEffect {
 
