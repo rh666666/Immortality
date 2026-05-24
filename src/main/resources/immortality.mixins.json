@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "com.adoleiiiiii.immortality.mixin",
   "compatibilityLevel": "JAVA_17",
+  "refmap": "immortality.refmap.json",
   "mixins": [
     "ItemAccessor",
     "LivingEntityDamageMixin",

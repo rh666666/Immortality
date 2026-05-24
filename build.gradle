@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = mod_version
@@ -64,6 +65,10 @@ minecraft {
 
             // Forge 1.20.1 通过启动参数与 JAR Manifest 注册 Mixin（mods.toml 的 [[mixins]] 无效）
             args '--mixin.config', "${mod_id}.mixins.json"
+
+            // 开发环境将 refmap 中的 SRG 名映射回当前 MCP/official 名，与正式包中的 refmap 行为一致
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${layout.buildDirectory.get().asFile}/createMcpToSrg/output.tsrg"
 
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
@@ -147,6 +152,13 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
