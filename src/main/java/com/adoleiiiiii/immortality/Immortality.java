@@ -6,6 +6,7 @@ import com.adoleiiiiii.immortality.effect.ModEffects;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerAccess;
 import com.adoleiiiiii.immortality.util.ImmortalityPenaltyHandler;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -83,7 +84,24 @@ public class Immortality {
     }
 
     /**
-     * 不屈效果被移除时结算生命上限惩罚。
+     * 不屈效果自然到期时结算生命上限惩罚。
+     * <p>
+     * 注意：效果到期只触发 {@link MobEffectEvent.Expired}，<b>不</b>触发 Remove。
+     */
+    @SubscribeEvent
+    public void onMobEffectExpired(MobEffectEvent.Expired event) {
+        MobEffectInstance effectInstance = event.getEffectInstance();
+        if (effectInstance == null || !effectInstance.getEffect().is(ModEffects.IMMORTALITY_EFFECT.getKey())) {
+            return;
+        }
+        if (!(event.getEntity() instanceof net.minecraft.world.entity.player.Player player)) {
+            return;
+        }
+        ImmortalityPenaltyHandler.handleEffectEnd(player);
+    }
+
+    /**
+     * 不屈效果被移除（手动/牛奶/命令）时结算生命上限惩罚。
      */
     @SubscribeEvent
     public void onMobEffectRemoved(MobEffectEvent.Remove event) {
