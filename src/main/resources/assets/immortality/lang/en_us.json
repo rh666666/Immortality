@@ -1,0 +1,9 @@
+{
+  "effect.immortality.immortality": "Immortality",
+  "effect.immortality.immortality.description": "While active, prevents death with totem effects. Each death resisted stacks damage reduction and knockback resistance. When the buff ends, max health is reduced by the number of deaths.",
+
+  "advancements.immortality.burn_out_body.title": "Burn Out This Body",
+  "advancements.immortality.burn_out_body.description": "Burned out from endless revival.",
+
+  "death.attack.burn_out": "%1$s burned out"
+}

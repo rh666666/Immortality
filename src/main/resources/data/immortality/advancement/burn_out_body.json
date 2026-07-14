@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:adventure/totem_of_undying",
+  "display": {
+    "icon": {
+      "id": "minecraft:totem_of_undying",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.immortality.burn_out_body.title"
+    },
+    "description": {
+      "translate": "advancements.immortality.burn_out_body.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "burn_out_body": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "burn_out_body"
+    ]
+  ]
+}
