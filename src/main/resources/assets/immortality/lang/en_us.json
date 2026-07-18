@@ -1,7 +1,13 @@
 {
     "effect.immortality.immortality": "Immortality",
     "effect.immortality.immortality.description": "For the duration, fatal damage triggers a Totem of Undying effect and grants or strengthens Strength. Each death resisted stacks damage reduction and grants knockback resistance equal to that reduction (up to 100%). When the effect ends, max health is reduced by your death count during the buff; this penalty is removed after you respawn.",
+    "effect.immortality.true_power": "True Power",
+    "effect.immortality.true_power.description": "Attacks deal lethal damage to any target.",
     "advancements.immortality.burn_out_body.title": "Consume me!",
     "advancements.immortality.burn_out_body.description": "Burned yourself out in endless revival.",
+    "advancements.immortality.ever_stronger.title": "Ever Stronger",
+    "advancements.immortality.ever_stronger.description": "Temper yourself through death",
+    "advancements.immortality.true_power.title": "True Power",
+    "advancements.immortality.true_power.description": "Your strength has reached an unbelievable level",
     "death.attack.burn_out": "%1$s burned out"
 }

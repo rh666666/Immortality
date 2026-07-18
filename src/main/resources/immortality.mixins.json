@@ -6,6 +6,7 @@
     "ItemAccessor",
     "LivingEntityDamageMixin",
     "LivingEntityRemoveEffectMixin",
+    "MilkBucketItemMixin",
     "PlayerEntityImmortalityMixin",
     "PlayerEntityMixin"
   ],

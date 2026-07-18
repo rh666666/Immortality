@@ -77,4 +77,32 @@ public interface ImmortalityPlayerAccess {
 	 * @param settled 是否已结算
 	 */
 	void immortality$setEffectEndSettled(boolean settled);
+
+	/**
+	 * 非自然移除保护标记。
+	 *
+	 * @return {@code true} 表示受保护，不能被直接 removeStatusEffect 移除
+	 */
+	boolean immortality$isProtected();
+
+	/**
+	 * 设置非自然移除保护标记。
+	 *
+	 * @param protect 是否受保护
+	 */
+	void immortality$setProtected(boolean protect);
+
+	/**
+	 * 获取不屈效果剩余时长的备份（用于被非自然移除后恢复）。
+	 *
+	 * @return 剩余 tick
+	 */
+	int immortality$getImmortalityDuration();
+
+	/**
+	 * 设置不屈效果剩余时长的备份。
+	 *
+	 * @param duration 剩余 tick
+	 */
+	void immortality$setImmortalityDuration(int duration);
 }

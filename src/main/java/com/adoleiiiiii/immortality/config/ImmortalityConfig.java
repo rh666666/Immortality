@@ -23,7 +23,7 @@ public final class ImmortalityConfig {
 			FabricLoader.getInstance().getConfigDir().resolve("immortality.yml");
 	private static final String DEFAULT_CONFIG_RESOURCE = "/immortality-default.yml";
 
-	/** 默认减伤系数：H_max=20、D=19 时 R=95%。 */
+	/* 默认减伤系数：H_max=20、D=19 时 R=95%。 */
 	public static final float DEFAULT_DAMAGE_REDUCTION_K = 20.0f;
 
 	private static float damageReductionK = DEFAULT_DAMAGE_REDUCTION_K;

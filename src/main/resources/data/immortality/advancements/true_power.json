@@ -1,0 +1,28 @@
+{
+  "parent": "immortality:ever_stronger",
+  "display": {
+    "icon": {
+      "item": "minecraft:wooden_sword"
+    },
+    "title": {
+      "translate": "advancements.immortality.true_power.title"
+    },
+    "description": {
+      "translate": "advancements.immortality.true_power.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "true_power": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "true_power"
+    ]
+  ]
+}
