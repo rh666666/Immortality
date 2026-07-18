@@ -19,8 +19,17 @@ public final class ModEffects {
 	public static final ImmortalityEffect IMMORTALITY_EFFECT = new ImmortalityEffect();
 
 	/** 不屈 buff 注册对象。 */
+	@SuppressWarnings("unused")
 	public static final RegistryObject<MobEffect> IMMORTALITY =
 			MOB_EFFECTS.register("immortality", () -> IMMORTALITY_EFFECT);
+
+	/** 真正的力量实例。 */
+	public static final TruePowerEffect TRUE_POWER_EFFECT = new TruePowerEffect();
+
+	/** 真正的力量注册对象。 */
+	@SuppressWarnings("unused")
+	public static final RegistryObject<MobEffect> TRUE_POWER =
+			MOB_EFFECTS.register("true_power", () -> TRUE_POWER_EFFECT);
 
 	private ModEffects() {
 	}

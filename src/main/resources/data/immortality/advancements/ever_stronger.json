@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:adventure/totem_of_undying",
+  "display": {
+    "icon": {
+      "item": "minecraft:iron_sword"
+    },
+    "title": {
+      "translate": "advancements.immortality.ever_stronger.title"
+    },
+    "description": {
+      "translate": "advancements.immortality.ever_stronger.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ever_stronger": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "ever_stronger"
+    ]
+  ]
+}

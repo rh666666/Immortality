@@ -35,12 +35,22 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 	@Unique
 	private boolean immortality$effectEndSettled;
 
+	/** 非自然移除保护标记。 */
+	@Unique
+	private boolean immortality$protected;
+
+	/** 不屈效果时长备份。 */
+	@Unique
+	private int immortality$immortalityDuration;
+
 	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	private void immortality$addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
 		CompoundTag data = new CompoundTag();
 		data.putInt(ImmortalityPlayerNbt.DEATH_COUNT, immortality$deathCount);
 		data.putBoolean(ImmortalityPlayerNbt.BUFF_SESSION_ACTIVE, immortality$buffSessionActive);
 		data.putBoolean(ImmortalityPlayerNbt.EFFECT_END_SETTLED, immortality$effectEndSettled);
+		data.putBoolean(ImmortalityPlayerNbt.IMMORTALITY_PROTECTED, immortality$protected);
+		data.putInt(ImmortalityPlayerNbt.IMMORTALITY_DURATION, immortality$immortalityDuration);
 		tag.put(ImmortalityPlayerNbt.ROOT, data);
 	}
 
@@ -60,6 +70,8 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		immortality$deathCount = Math.max(0, data.getInt(ImmortalityPlayerNbt.DEATH_COUNT));
 		immortality$buffSessionActive = data.getBoolean(ImmortalityPlayerNbt.BUFF_SESSION_ACTIVE);
 		immortality$effectEndSettled = data.getBoolean(ImmortalityPlayerNbt.EFFECT_END_SETTLED);
+		immortality$protected = data.getBoolean(ImmortalityPlayerNbt.IMMORTALITY_PROTECTED);
+		immortality$immortalityDuration = Math.max(0, data.getInt(ImmortalityPlayerNbt.IMMORTALITY_DURATION));
 
 		if (player.level().isClientSide) {
 			return;
@@ -85,6 +97,8 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		immortality$buffSessionActive = false;
 		immortality$effectEndSettled = false;
 		immortality$refreshingBuff = false;
+		immortality$protected = false;
+		immortality$immortalityDuration = 0;
 		immortality$clearKnockbackResistance();
 	}
 
@@ -203,5 +217,27 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		if (knockbackResistance != null) {
 			knockbackResistance.removeModifier(ImmortalityConstants.KNOCKBACK_RESISTANCE_MODIFIER_ID);
 		}
+	}
+
+	// ── 保护标记 ──
+
+	@Override
+	public boolean immortality$isProtected() {
+		return immortality$protected;
+	}
+
+	@Override
+	public void immortality$setProtected(boolean protect) {
+		immortality$protected = protect;
+	}
+
+	@Override
+	public int immortality$getImmortalityDuration() {
+		return immortality$immortalityDuration;
+	}
+
+	@Override
+	public void immortality$setImmortalityDuration(int duration) {
+		immortality$immortalityDuration = duration;
 	}
 }
