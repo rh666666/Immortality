@@ -9,10 +9,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -136,9 +134,6 @@ public class TruePowerHandler {
 
 		serverLevel.broadcastEntityEvent(entity, (byte) 3);
 		entity.setPose(Pose.DYING);
-
-		/* 手动补发死亡事件：使依赖 LivingDeathEvent 的掉落（如亚波伦的 DOOM_MEDAL）正常触发 */
-		MinecraftForge.EVENT_BUS.post(new LivingDeathEvent(entity, source));
 	}
 
 	/**
