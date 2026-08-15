@@ -14,7 +14,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.common.ForgeHooks;
 
 /**
- * 真正的力量旁路击杀：开致命标记后补完死亡流程。
+ * 真正的力量旁路击杀：开致命标记并补完死亡流程。
  * <p>
  * 不经 {@code hurt}/{@code actuallyHurt}；不强制 {@code Entity#remove}。
  */
@@ -173,7 +173,23 @@ public final class TruePowerKillHelper {
 	}
 
 	/**
-	 * 击杀跟踪是否可结束。
+	 * 满额 {@code hurt} 是否已使目标进入可结束态（移除、原版死亡或完整死亡态）。
+	 *
+	 * @param target 目标；{@code null} 视为已结束
+	 * @return 可结束跟踪、无需旁路时为 true
+	 */
+	public static boolean isHurtPhaseResolved(LivingEntity target) {
+		if (target == null || target.isRemoved()) {
+			return true;
+		}
+		if (!target.isAlive()) {
+			return true;
+		}
+		return shouldStopTracking(target);
+	}
+
+	/**
+	 * 旁路击杀跟踪是否可结束。
 	 *
 	 * @param target 目标；{@code null} 视为可结束
 	 * @return 应停止跟踪时为 true
