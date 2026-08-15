@@ -5,6 +5,7 @@ import com.adoleiiiiii.immortality.effect.ModEffects;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerAccess;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerNbt;
 import com.adoleiiiiii.immortality.util.ImmortalityDamageHelper;
+import com.adoleiiiiii.immortality.util.ImmortalityDeathGate;
 import com.adoleiiiiii.immortality.util.ImmortalityPenaltyHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * 为玩家实体附加不屈 buff 期间的死亡计数与生命上限惩罚状态。
@@ -42,6 +44,22 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 	/** 不屈效果时长备份。 */
 	@Unique
 	private int immortality$immortalityDuration;
+
+	/** 致死抵抗边沿闩锁到期 tick（{@code tickCount}）；0 表示未闩锁。 */
+	@Unique
+	private int immortality$deathResistLatchUntil;
+
+	/**
+	 * {@link Player} 覆写了 {@code isImmobile}；不屈期间返空为 false。
+	 */
+	@Inject(method = "isImmobile", at = @At("HEAD"), cancellable = true)
+	private void immortality$neverPlayerImmobile(CallbackInfoReturnable<Boolean> cir) {
+		Player player = (Player) (Object) this;
+		if (!ImmortalityDeathGate.shouldVoidDeath(player)) {
+			return;
+		}
+		cir.setReturnValue(false);
+	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	private void immortality$addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
@@ -99,6 +117,7 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 		immortality$refreshingBuff = false;
 		immortality$protected = false;
 		immortality$immortalityDuration = 0;
+		immortality$deathResistLatchUntil = 0;
 		immortality$clearKnockbackResistance();
 	}
 
@@ -239,5 +258,20 @@ public abstract class PlayerEntityImmortalityMixin implements ImmortalityPlayerA
 	@Override
 	public void immortality$setImmortalityDuration(int duration) {
 		immortality$immortalityDuration = duration;
+	}
+
+	@Override
+	public boolean immortality$isDeathResistLatched() {
+		return ((Player) (Object) this).tickCount < immortality$deathResistLatchUntil;
+	}
+
+	@Override
+	public void immortality$setDeathResistLatched(boolean latched) {
+		if (latched) {
+			// 约 0.5 秒内同段致死只结算一次，之后的独立死亡可再次触发图腾。
+			immortality$deathResistLatchUntil = ((Player) (Object) this).tickCount + 10;
+		} else {
+			immortality$deathResistLatchUntil = 0;
+		}
 	}
 }

@@ -12,7 +12,15 @@
     "LivingEntityTruePowerMixin",
     "PlayerEntityImmortalityMixin",
     "PlayerEntityMixin",
+    "PlayerImmortalityTickMixin",
     "SynchedEntityDataAccessor"
+  ],
+  "client": [
+    "client.MinecraftDeathScreenMixin",
+    "client.ClientPacketListenerDeathMixin",
+    "client.DeathScreenMixin",
+    "client.LocalPlayerAliveMixin",
+    "client.LocalPlayerRespawnMixin"
   ],
   "injectors": {
     "defaultRequire": 1

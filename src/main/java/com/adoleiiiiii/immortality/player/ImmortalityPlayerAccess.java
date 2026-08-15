@@ -105,4 +105,23 @@ public interface ImmortalityPlayerAccess {
 	 * @param duration 时长（tick）
 	 */
 	void immortality$setImmortalityDuration(int duration);
+
+	/**
+	 * 致死抵抗边沿闩锁是否仍在冷却中。
+	 * <p>
+	 * 同一短时窗口内的连续致死写入只完整结算一次图腾，避免单次伤害刷计数；
+	 * 冷却结束后下一次死亡会再次完整触发。
+	 *
+	 * @return 若为 true，致死路径只维持存活、不 {@code deathCount++}
+	 */
+	boolean immortality$isDeathResistLatched();
+
+	/**
+	 * 设置致死抵抗边沿闩锁。
+	 * <p>
+	 * {@code true}：从当前 tick 起进入短时冷却；{@code false}：立即解除。
+	 *
+	 * @param latched 是否进入/解除闩锁
+	 */
+	void immortality$setDeathResistLatched(boolean latched);
 }

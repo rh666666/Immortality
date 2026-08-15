@@ -6,6 +6,8 @@ import com.adoleiiiiii.immortality.damage.ImmortalityDamageTypes;
 import com.adoleiiiiii.immortality.effect.ModEffects;
 import com.adoleiiiiii.immortality.mixin.ItemAccessor;
 import com.adoleiiiiii.immortality.player.ImmortalityPlayerAccess;
+import com.adoleiiiiii.immortality.util.ImmortalityDeathGate;
+import com.adoleiiiiii.immortality.util.ImmortalityTotemHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -92,6 +95,44 @@ public class Immortality {
 			access.immortality$clearMaxHealthPenalty();
 			access.immortality$setBuffSessionActive(false);
 			access.immortality$setEffectEndSettled(false);
+			access.immortality$setDeathResistLatched(false);
+		}
+	}
+
+	/**
+	 * 进服时若仍持有不屈，维持存活态（死亡链路返空，无需重建实体）。
+	 *
+	 * @param event 玩家登录事件
+	 */
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+		Player player = event.getEntity();
+		if (player.hasEffect(ModEffects.IMMORTALITY_EFFECT)) {
+			ImmortalityTotemHelper.ensureSurviving(player);
+			ImmortalityTotemHelper.syncHealthPacket(player);
+		}
+	}
+
+	/**
+	 * 不屈期间取消原版 {@link LivingDeathEvent}，废除死亡事件传播。
+	 * <p>
+	 * 效果已结算结束（如燃尽击杀）时不拦截，以便正常死亡与进度授予。
+	 *
+	 * @param event 生物死亡事件
+	 */
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onLivingDeathCancelWhileImmortal(LivingDeathEvent event) {
+		if (!(event.getEntity() instanceof Player player)) {
+			return;
+		}
+		if (!ImmortalityDeathGate.shouldVoidDeath(player)) {
+			return;
+		}
+		event.setCanceled(true);
+		if (!player.level().isClientSide) {
+			ImmortalityTotemHelper.tryTriggerLethalResist(player);
+		} else {
+			ImmortalityTotemHelper.ensureSurviving(player);
 		}
 	}
 
@@ -102,6 +143,9 @@ public class Immortality {
 	 */
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
+		if (event.isCanceled()) {
+			return;
+		}
 		if (!(event.getEntity() instanceof ServerPlayer player)) {
 			return;
 		}

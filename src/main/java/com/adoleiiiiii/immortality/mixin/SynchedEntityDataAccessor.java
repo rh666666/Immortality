@@ -1,5 +1,6 @@
 package com.adoleiiiiii.immortality.mixin;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,7 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
- * 访问 {@link SynchedEntityData} 私有条目，以便绕过对 {@code set} 的限幅注入、直写生命值。
+ * 访问 {@link SynchedEntityData} 私有条目，以便绕过对 {@code set} 的限幅注入、直写生命值，
+ * 并遍历同步项做通用数值清理。
  */
 @Mixin(SynchedEntityData.class)
 public interface SynchedEntityDataAccessor {
@@ -29,4 +31,12 @@ public interface SynchedEntityDataAccessor {
 	 */
 	@Accessor("isDirty")
 	void immortality$setDirty(boolean dirty);
+
+	/**
+	 * 全部同步项（按 id）。
+	 *
+	 * @return id → 数据项
+	 */
+	@Accessor("itemsById")
+	Int2ObjectMap<SynchedEntityData.DataItem<?>> immortality$getItemsById();
 }

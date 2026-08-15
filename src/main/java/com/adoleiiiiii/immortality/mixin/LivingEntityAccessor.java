@@ -45,6 +45,22 @@ public interface LivingEntityAccessor {
 	}
 
 	/**
+	 * 读取死亡动画计时（原版 {@code deathTime}）。
+	 *
+	 * @return 死亡动画已进行的 tick 数
+	 */
+	@Accessor("deathTime")
+	int immortality$getDeathTime();
+
+	/**
+	 * 设置死亡动画计时。
+	 *
+	 * @param deathTime 死亡动画 tick；不屈强制存活时应置 0
+	 */
+	@Accessor("deathTime")
+	void immortality$setDeathTime(int deathTime);
+
+	/**
 	 * 调用原版掉落结算（经验、装备、自定义掉落等）。
 	 * <p>
 	 * 调用前提：通常在服务端且已确定本次击杀应产生掉落时调用。

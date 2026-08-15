@@ -37,6 +37,7 @@ public final class ImmortalityAsmBootstrap {
 					(Map<String, ILaunchPluginService>) pluginsField.get(handler);
 			plugins.put(plugin.name(), plugin);
 			registered = true;
+			LOGGER.info("Registered launch plugin '{}' (Phase.AFTER).", plugin.name());
 		} catch (Throwable t) {
 			LOGGER.error("Failed to register launch plugin", t);
 		}
