@@ -4,11 +4,15 @@
   "package": "com.adoleiiiiii.immortality.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "immortality.refmap.json",
+  "plugin": "com.adoleiiiiii.immortality.asm.ImmortalityMixinPlugin",
   "mixins": [
     "ItemAccessor",
+    "LivingEntityAccessor",
     "LivingEntityDamageMixin",
+    "LivingEntityTruePowerMixin",
     "PlayerEntityImmortalityMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "SynchedEntityDataAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
