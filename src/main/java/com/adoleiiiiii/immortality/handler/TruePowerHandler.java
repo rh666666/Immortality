@@ -74,6 +74,9 @@ public class TruePowerHandler {
 		if (!(event.getTarget() instanceof LivingEntity living)) {
 			return;
 		}
+		if (living instanceof Player) {
+			return;
+		}
 
 		Player player = event.getEntity();
 		if (!player.hasEffect(ModEffects.TRUE_POWER_EFFECT)) {
@@ -129,7 +132,7 @@ public class TruePowerHandler {
 		LivingEntity living = raw instanceof LivingEntity le ? le : null;
 		entry.ticks++;
 
-		if (living == null || living.isRemoved() || entry.ticks >= MAX_TRACK_TICKS) {
+		if (living == null || living.isRemoved() || living instanceof Player || entry.ticks >= MAX_TRACK_TICKS) {
 			PENDING_KILLS.remove(player.getUUID());
 			return;
 		}

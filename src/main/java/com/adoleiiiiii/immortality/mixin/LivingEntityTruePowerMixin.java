@@ -1,16 +1,14 @@
 package com.adoleiiiiii.immortality.mixin;
 
 import com.adoleiiiiii.immortality.player.TruePowerVictimAccess;
-import com.adoleiiiiii.immortality.util.TruePowerKillHelper;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** 挂载真正的力量压制 / 致命态，压制期内禁止抬血。 */
+/** 挂载真正的力量致命态；压制期内取消 {@code heal}，不介入 {@code setHealth}。 */
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityTruePowerMixin implements TruePowerVictimAccess {
 
@@ -71,29 +69,7 @@ public abstract class LivingEntityTruePowerMixin implements TruePowerVictimAcces
 		}
 	}
 
-	/**
-	 * 压制期间禁止抬血；生命语义已 ≤0 时钉在 0。
-	 *
-	 * @param health 即将写入的生命值
-	 * @return 约束后的生命值
-	 */
-	@ModifyVariable(method = "setHealth", at = @At("HEAD"), argsOnly = true)
-	private float immortality$clampHealthWhileSuppressed(float health) {
-		if (!this.immortality$isTruePowerSuppressing()) {
-			return health;
-		}
-		LivingEntity self = (LivingEntity) (Object) this;
-		float current = self.getHealth();
-		if (current <= 0.0F) {
-			return 0.0F;
-		}
-		if (health > current) {
-			return current;
-		}
-		return health;
-	}
-
-	/** 递减压制；致命且未 {@code dead} 时维持钉血。 */
+	/** 递减压制计时。 */
 	@Inject(method = "baseTick", at = @At("TAIL"))
 	private void immortality$tickTruePowerSuppressState(CallbackInfo ci) {
 		LivingEntity self = (LivingEntity) (Object) this;
@@ -104,8 +80,5 @@ public abstract class LivingEntityTruePowerMixin implements TruePowerVictimAcces
 			return;
 		}
 		this.immortality$tickTruePowerSuppress();
-		if (this.immortality$isTruePowerLethal() && !((LivingEntityAccessor) self).immortality$isDead()) {
-			TruePowerKillHelper.forceZeroHealth(self);
-		}
 	}
 }

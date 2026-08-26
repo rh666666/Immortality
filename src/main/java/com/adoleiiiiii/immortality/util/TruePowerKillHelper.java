@@ -32,7 +32,7 @@ public final class TruePowerKillHelper {
 	 * @param target 目标生物
 	 */
 	public static void forceZeroHealth(LivingEntity target) {
-		if (target.level().isClientSide) {
+		if (target.level().isClientSide || target instanceof Player) {
 			return;
 		}
 		if (target instanceof TruePowerVictimAccess victim && !victim.immortality$isTruePowerLethal()) {
@@ -84,7 +84,7 @@ public final class TruePowerKillHelper {
 	 * @param attacker 持有效果的玩家
 	 */
 	public static void applyLethal(LivingEntity target, Player attacker) {
-		if (target.level().isClientSide) {
+		if (target.level().isClientSide || target instanceof Player) {
 			return;
 		}
 		if (!(target instanceof TruePowerVictimAccess victim)) {
@@ -109,7 +109,7 @@ public final class TruePowerKillHelper {
 	 * @param attacker 持有效果的玩家
 	 */
 	public static void maintainLethal(LivingEntity target, Player attacker) {
-		if (target.level().isClientSide || target.isRemoved()) {
+		if (target.level().isClientSide || target.isRemoved() || target instanceof Player) {
 			return;
 		}
 		if (!(target instanceof TruePowerVictimAccess victim)) {
